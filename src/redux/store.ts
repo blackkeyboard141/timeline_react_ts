@@ -5,6 +5,8 @@ const rootReducer = combineReducers({
   userEvents: userEventReducer,
 });
 
+export type RootState = ReturnType<typeof rootReducer>;
+
 const store = createStore(rootReducer);
 
 export default store;
