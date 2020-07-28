@@ -1,3 +1,5 @@
+import { AnyAction } from "redux";
+
 interface UserEvent {
   id: number;
   title: string;
@@ -5,11 +7,21 @@ interface UserEvent {
   dateEnd: string;
 }
 
-const userEventReducer = (state, action) => {
-  switch (action.type) {
-    case value:
-      break;
+interface UserEventState {
+  byIds: Record<UserEvent["id"], UserEvent>; //userevent id
+  allIds: UserEvent["id"][]; // array of list of ids of user events
+}
 
+const initialState: UserEventState = {
+  byIds: {},
+  allIds: [],
+};
+
+const userEventReducer = (
+  state: UserEventState = initialState,
+  action: AnyAction
+) => {
+  switch (action.type) {
     default:
       return state;
   }
