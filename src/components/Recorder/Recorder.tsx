@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import "./Recorder.css";
 import { useDispatch, useSelector } from "react-redux";
 import cx from "classnames";
-import { start, selectDateStart } from "../../redux/recorder";
+import { start, stop, selectDateStart } from "../../redux/recorder";
 
 const addZero = (num: number) => (num < 10 ? `0${num}` : `${num}`);
 
@@ -16,10 +16,15 @@ const Recorder = () => {
   const [, setCount] = useState<number>(0); //using react hooks
 
   const handleClick = () => {
-    dispatch(start());
-    interval.current = window.setInterval(() => {
-      setCount((count) => count + 1);
-    }, 1000);
+    if (started) {
+      window.clearInterval(interval.current);
+      dispatch(stop());
+    } else {
+      dispatch(start());
+      interval.current = window.setInterval(() => {
+        setCount((count) => count + 1);
+      }, 1000);
+    }
   };
 
   useEffect(() => {
