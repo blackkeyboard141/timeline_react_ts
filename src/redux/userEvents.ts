@@ -67,11 +67,23 @@ const initialState: UserEventState = {
   allIds: [],
 };
 
+//reducers
 const userEventReducer = (
   state: UserEventState = initialState,
-  action: AnyAction
+  action: LoadSuccessAction
 ) => {
   switch (action.type) {
+    case LOAD_SUCCESS:
+      const { events } = action.payload;
+      return {
+        ...state,
+        allIds: events.map(({ id }) => id),
+        byIds: events.reduce<UserEventState["byIds"]>((byIds, event) => {
+          byIds[event.id] = event;
+          return byIds;
+        }, {}),
+      };
+
     default:
       return state;
   }
