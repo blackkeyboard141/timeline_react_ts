@@ -14,9 +14,11 @@ interface UserEventState {
   allIds: UserEvent["id"][]; // array of list of ids of user events
 }
 
+//action set
 const LOAD_REQUEST = "userEvents/load_request";
 
 interface LoadRequestAction extends Action<typeof LOAD_REQUEST> {}
+// -----
 
 const LOAD_SUCCESS = "userEvents/load_success";
 
@@ -26,11 +28,19 @@ interface LoadSuccessAction extends Action<typeof LOAD_SUCCESS> {
   };
 }
 
+const ERROR_EVENT = "userEvents/error_event";
+
+interface ErrorEventAction extends Action<typeof ERROR_EVENT> {
+  payload: {
+    errorMessage: string;
+  };
+}
+
 export const loadUserEvents = (): ThunkAction<
   void,
   RootState,
   undefined,
-  LoadRequestAction | LoadSuccessAction
+  LoadRequestAction | LoadSuccessAction | ErrorEventAction
 > => async (dispatch, getState) => {
   dispatch({
     type: LOAD_REQUEST,
@@ -44,7 +54,12 @@ export const loadUserEvents = (): ThunkAction<
       type: LOAD_SUCCESS,
       payload: { events },
     });
-  } catch (error) {}
+  } catch (e) {
+    dispatch({
+      type: ERROR_EVENT,
+      payload: { errorMessage: "failed to load" },
+    });
+  }
 };
 
 const initialState: UserEventState = {
