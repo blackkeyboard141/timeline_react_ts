@@ -4,22 +4,24 @@ import { useDispatch, useSelector } from "react-redux";
 import cx from "classnames";
 import { start, stop, selectDateStart } from "../../redux/recorder";
 
-const addZero = (num: number) => (num < 10 ? `0${num}` : `${num}`);
+const addZero = (num: number) => (num < 10 ? `0${num}` : `${num}`); //adding leading zero to single digits
 
 const Recorder = () => {
   const dispatch = useDispatch(); // from redux
 
-  const dateStart = useSelector(selectDateStart);
+  const dateStart = useSelector(selectDateStart); //not sure what selector is
 
-  const started = dateStart !== "";
-  let interval = useRef<number>(0);
-  const [, setCount] = useState<number>(0); //using react hooks
+  const started: boolean = dateStart !== ""; //
+  let interval = useRef<number>(0); // not sure what useRef is
+  const [, setCount] = useState<number>(0); //using react hooks to get state
 
   const handleClick = () => {
     if (started) {
+      //already started, pressed to stop
       window.clearInterval(interval.current);
       dispatch(stop());
     } else {
+      //starting
       dispatch(start());
       interval.current = window.setInterval(() => {
         setCount((count) => count + 1);
@@ -34,6 +36,7 @@ const Recorder = () => {
     };
   }, []);
 
+  //calculating when the button was pressed and current time
   let seconds = started
     ? Math.floor((Date.now() - new Date(dateStart).getTime()) / 1000)
     : 0;
@@ -44,7 +47,12 @@ const Recorder = () => {
   seconds -= minutes * 60;
 
   return (
-    <div className={cx("recorder", { "recorder-started": started })}>
+    <div
+      className={cx("recorder", {
+        //cs is used to change classnames based on condition
+        "recorder-started": started,
+      })}
+    >
       <button className="recorder-record" onClick={handleClick}>
         <span></span>
       </button>
