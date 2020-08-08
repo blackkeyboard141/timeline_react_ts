@@ -62,6 +62,13 @@ export const loadUserEvents = (): ThunkAction<
   }
 };
 
+const selectUserEventsState = (rootState: RootState) => rootState.userEvents; //I am guessing this returns
+
+export const selectUserEventsArray = (rootState: RootState) => {
+  const state = selectUserEventsState(rootState);
+  return state.allIds.map((id) => state.byIds[id]);
+};
+
 const initialState: UserEventState = {
   byIds: {},
   allIds: [],
@@ -75,6 +82,7 @@ const userEventReducer = (
   switch (action.type) {
     case LOAD_SUCCESS:
       const { events } = action.payload;
+      //please decipher
       return {
         ...state,
         allIds: events.map(({ id }) => id),

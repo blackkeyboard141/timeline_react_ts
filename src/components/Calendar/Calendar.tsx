@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Calendar.css";
+import { connect, ConnectedProps } from "react-redux";
+import { RootState } from "../../redux/store";
+import { selectUserEventsArray, loadUserEvents } from "../../redux/userEvents";
 
-const Calendar = () => {
+const mapState = (state: RootState) => ({
+  events: selectUserEventsArray(state),
+});
+
+const mapDispatch = {
+  loadUserEvents,
+};
+
+const connector = connect(mapState, mapDispatch);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface Props extends PropsFromRedux {}
+
+const Calendar: React.FC<Props> = ({ events, loadUserEvents }) => {
+  useEffect(() => {
+    loadUserEvents();
+  }, []);
   return (
     <div className="calendar">
       <div className="calender-day">
@@ -22,4 +42,4 @@ const Calendar = () => {
   );
 };
 
-export default Calendar;
+export default connector(Calendar);
